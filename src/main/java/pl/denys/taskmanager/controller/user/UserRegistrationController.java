@@ -1,12 +1,12 @@
 package pl.denys.taskmanager.controller.user;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class UserRegistrationController {
-    @GetMapping("/ping")
+    @GetMapping("/register")
     public String registerUser(){
-        return "pong";
+        return "register";
     }
 }

@@ -1,15 +1,12 @@
-package pl.denys.taskmanager.config.security.user;
+package pl.denys.taskmanager.config.security.userdetails;
 
+import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.denys.taskmanager.enums.RoleEnum;
-
-import java.util.Collection;
-import java.util.Set;
 
 @Builder
 @NoArgsConstructor

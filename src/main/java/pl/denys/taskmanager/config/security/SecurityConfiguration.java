@@ -2,31 +2,38 @@ package pl.denys.taskmanager.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import pl.denys.taskmanager.config.security.authenticationmanager.AppUsernamePasswordAuthenticationManager;
+import pl.denys.taskmanager.config.security.userdetailsmanager.AppUserDetailsManager;
+import pl.denys.taskmanager.facade.user.UserFacade;
+import pl.denys.taskmanager.repository.role.RoleRepository;
+import pl.denys.taskmanager.repository.user.UserRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
   @Bean
-  public DefaultSecurityFilterChain httpSecurity(HttpSecurity httpSecurity) throws Exception {
+  public DefaultSecurityFilterChain httpSecurity(HttpSecurity httpSecurity, UserFacade userFacade)
+      throws Exception {
     httpSecurity
         .authorizeHttpRequests((request) -> request.anyRequest().authenticated())
         .formLogin(
             (login) ->
                 login
                     .loginPage("/login")
-                    .defaultSuccessUrl("/ping", true)
+                    .defaultSuccessUrl("/ping")
                     .passwordParameter("password")
                     .usernameParameter("username")
                     .permitAll())
+        .authenticationManager(authenticationManager(userFacade))
         .logout((logout) -> logout.logoutUrl("/logout").permitAll());
 
     return httpSecurity.build();
@@ -50,10 +57,21 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  protected UserDetailsService userDetailsService() {
-    UserDetails annaSmithUser =
-        User.builder().username("annasmith").password(passwordEncoder().encode("password")).build();
+  public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+    var dao = new DaoAuthenticationProvider();
+    dao.setPasswordEncoder(passwordEncoder());
+    dao.setUserDetailsService(userDetailsService);
+    return dao;
+  }
 
-    return new InMemoryUserDetailsManager(annaSmithUser);
+  @Bean
+  public AuthenticationManager authenticationManager(UserFacade userFacade) {
+    return new AppUsernamePasswordAuthenticationManager(userFacade);
+  }
+
+  @Bean
+  public UserDetailsService userDetailsService(
+      UserRepository userRepository, RoleRepository roleRepository) {
+    return new AppUserDetailsManager(userRepository, roleRepository);
   }
 }

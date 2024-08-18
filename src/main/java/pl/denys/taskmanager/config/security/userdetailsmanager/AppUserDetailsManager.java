@@ -1,16 +1,15 @@
-package pl.denys.taskmanager.config.security.user;
+package pl.denys.taskmanager.config.security.userdetailsmanager;
+
+import static pl.denys.taskmanager.enums.RoleEnum.USER;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.stereotype.Service;
 import pl.denys.taskmanager.model.role.Role;
 import pl.denys.taskmanager.model.user.User;
 import pl.denys.taskmanager.repository.role.RoleRepository;
 import pl.denys.taskmanager.repository.user.UserRepository;
-
-import static pl.denys.taskmanager.enums.RoleEnum.USER;
 
 @RequiredArgsConstructor
 public class AppUserDetailsManager implements UserDetailsManager {
