@@ -24,14 +24,16 @@ import pl.denys.taskmanager.model.role.Role;
 @Getter
 @Setter
 public class User {
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id")
-    private Long id;
-    @Column(name = "username", nullable = false)
-    private String username;
-    @Column(name = "password", nullable = false)
-    private String password;
-    @OneToMany
-    private Set<Role> roleSet;
+  @Id
+  @GeneratedValue(strategy = IDENTITY)
+  @Column(name = "id")
+  private Long id;
+
+  @Column(name = "username", nullable = false, unique = true)
+  private String username;
+
+  @Column(name = "password", nullable = false)
+  private String password;
+
+  @OneToMany private Set<Role> roleSet;
 }
