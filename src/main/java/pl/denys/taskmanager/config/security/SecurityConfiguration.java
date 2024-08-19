@@ -24,12 +24,14 @@ public class SecurityConfiguration {
   public DefaultSecurityFilterChain httpSecurity(HttpSecurity httpSecurity, UserFacade userFacade)
       throws Exception {
     httpSecurity
-        .authorizeHttpRequests((request) -> request.anyRequest().authenticated())
+        .authorizeHttpRequests(
+            (request) ->
+                request.requestMatchers("/register").permitAll().anyRequest().authenticated())
         .formLogin(
             (login) ->
                 login
                     .loginPage("/login")
-                    .defaultSuccessUrl("/ping")
+                    .defaultSuccessUrl("/")
                     .passwordParameter("password")
                     .usernameParameter("username")
                     .permitAll())
@@ -39,10 +41,12 @@ public class SecurityConfiguration {
     return httpSecurity.build();
   }
 
+
+  //todo make a file
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new PasswordEncoder() {
-      BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
+      final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 
       @Override
       public String encode(CharSequence rawPassword) {

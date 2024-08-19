@@ -1,4 +1,4 @@
-package pl.denys.taskmanager.dto.user;
+package pl.denys.taskmanager.dto.register;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class UserDTO {
-  private Long id;
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class RegisterForm {
   private String username;
+  private String password;
 }
