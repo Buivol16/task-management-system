@@ -1,4 +1,4 @@
-package pl.denys.taskmanager.mapper;
+package pl.denys.taskmanager.mapper.user;
 
 import org.mapstruct.Mapper;
 import pl.denys.taskmanager.config.security.userdetails.AppUserDetails;

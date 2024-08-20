@@ -15,7 +15,7 @@ public class AppUsernamePasswordAuthenticationManager implements AuthenticationM
   public Authentication authenticate(Authentication authentication) throws BadCredentialsException {
     String principal = (String) authentication.getPrincipal();
     String credentials = (String) authentication.getCredentials();
-    userFacade.findByUsernameAndMatchPassword(principal, credentials);
-    return new AppUsernamePasswordAuthentication(principal, credentials, true);
+    var user = userFacade.findByUsernameAndMatchPassword(principal, credentials);
+    return new AppUsernamePasswordAuthentication(principal, credentials, user.getRole(), true);
   }
 }

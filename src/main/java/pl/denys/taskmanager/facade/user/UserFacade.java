@@ -1,5 +1,7 @@
 package pl.denys.taskmanager.facade.user;
 
+import static pl.denys.taskmanager.enums.Role.USER;
+
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpEntity;
@@ -8,7 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.denys.taskmanager.mapper.UserMapper;
+import pl.denys.taskmanager.mapper.user.UserMapper;
 import pl.denys.taskmanager.model.user.User;
 import pl.denys.taskmanager.repository.user.UserRepository;
 
@@ -36,7 +38,7 @@ public class UserFacade {
     if (checkForNullOrBlankOrThrowException(username)
         && checkForNullOrBlankOrThrowException(password)) {
       password = passwordEncoder.encode(password);
-      var user = User.builder().username(username).password(password).build();
+      var user = User.builder().username(username).password(password).role(USER).build();
       user = userRepository.save(user);
       var userDTO = userMapper.userToUserDTO(user);
       return ResponseEntity.ofNullable(userDTO);
