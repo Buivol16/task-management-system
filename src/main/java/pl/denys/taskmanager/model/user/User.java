@@ -1,20 +1,20 @@
 package pl.denys.taskmanager.model.user;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.denys.taskmanager.model.role.Role;
+import pl.denys.taskmanager.enums.Role;
 
 @Table(name = "users")
 @Entity
@@ -35,5 +35,7 @@ public class User {
   @Column(name = "password", nullable = false)
   private String password;
 
-  @OneToMany private Set<Role> roleSet;
+  @Column(name = "role")
+  @Enumerated(STRING)
+  private Role role;
 }

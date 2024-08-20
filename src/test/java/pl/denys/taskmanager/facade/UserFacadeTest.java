@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.denys.taskmanager.dto.user.UserDTO;
+import pl.denys.taskmanager.enums.Role;
 import pl.denys.taskmanager.facade.user.UserFacade;
 import pl.denys.taskmanager.model.user.User;
 import pl.denys.taskmanager.repository.user.UserRepository;
@@ -50,6 +51,7 @@ public class UserFacadeTest {
     assertEquals(username, found.getUsername());
     assertNotEquals(password, found.getPassword());
     assertEquals(1L, found.getId());
+    assertEquals(Role.USER, found.getRole());
   }
 
   @Test
@@ -89,6 +91,7 @@ public class UserFacadeTest {
     assertNotNull(response);
     assertEquals(1, response.getId());
     assertEquals(username, response.getUsername());
+    assertEquals(MOCK_USER_1.getRole(), response.getRole());
   }
 
   @Test

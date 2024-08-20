@@ -1,20 +1,21 @@
 package pl.denys.taskmanager.config.security.userdetailsmanager;
 
-import static pl.denys.taskmanager.enums.RoleEnum.USER;
+import static pl.denys.taskmanager.enums.Role.USER;
 
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
-import pl.denys.taskmanager.model.role.Role;
+import pl.denys.taskmanager.mapper.user.UserMapper;
 import pl.denys.taskmanager.model.user.User;
-import pl.denys.taskmanager.repository.role.RoleRepository;
 import pl.denys.taskmanager.repository.user.UserRepository;
 
 @RequiredArgsConstructor
 public class AppUserDetailsManager implements UserDetailsManager {
   private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
+
+  private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
   @Override
   public void createUser(UserDetails userDetails) {
@@ -22,10 +23,9 @@ public class AppUserDetailsManager implements UserDetailsManager {
         User.builder()
             .username(userDetails.getUsername())
             .password(userDetails.getPassword())
+            .role(USER)
             .build();
-    user = userRepository.save(user);
-    var userRole = Role.builder().user(user).role(USER).build();
-    roleRepository.save(userRole);
+    userRepository.save(user);
   }
 
   @Override
@@ -57,10 +57,6 @@ public class AppUserDetailsManager implements UserDetailsManager {
                 () ->
                     new UsernameNotFoundException(
                         "User by username " + username + " is not found"));
-    return org.springframework.security.core.userdetails.User.builder()
-        .username(user.getUsername())
-        .password(user.getPassword())
-        .authorities(user.getRoleSet().toString())
-        .build();
+    return userMapper.userToAppUserDetails(user);
   }
 }

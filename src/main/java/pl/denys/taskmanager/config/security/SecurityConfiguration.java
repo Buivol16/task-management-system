@@ -1,5 +1,7 @@
 package pl.denys.taskmanager.config.security;
 
+import static pl.denys.taskmanager.enums.Role.ADMIN;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +16,6 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import pl.denys.taskmanager.config.security.authenticationmanager.AppUsernamePasswordAuthenticationManager;
 import pl.denys.taskmanager.config.security.userdetailsmanager.AppUserDetailsManager;
 import pl.denys.taskmanager.facade.user.UserFacade;
-import pl.denys.taskmanager.repository.role.RoleRepository;
 import pl.denys.taskmanager.repository.user.UserRepository;
 
 @Configuration
@@ -26,7 +27,13 @@ public class SecurityConfiguration {
     httpSecurity
         .authorizeHttpRequests(
             (request) ->
-                request.requestMatchers("/register").permitAll().anyRequest().authenticated())
+                request
+                    .requestMatchers("/register")
+                    .permitAll()
+                    .requestMatchers("/test/**")
+                    .hasRole(ADMIN.name())
+                    .anyRequest()
+                    .authenticated())
         .formLogin(
             (login) ->
                 login
@@ -41,8 +48,7 @@ public class SecurityConfiguration {
     return httpSecurity.build();
   }
 
-
-  //todo make a file
+  // todo make a file
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new PasswordEncoder() {
@@ -74,8 +80,7 @@ public class SecurityConfiguration {
   }
 
   @Bean
-  public UserDetailsService userDetailsService(
-      UserRepository userRepository, RoleRepository roleRepository) {
-    return new AppUserDetailsManager(userRepository, roleRepository);
+  public UserDetailsService userDetailsService(UserRepository userRepository) {
+    return new AppUserDetailsManager(userRepository);
   }
 }
